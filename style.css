@@ -1,0 +1,764 @@
+:root {
+  --bg: #020617;
+  --bg-soft: rgba(15, 23, 42, 0.65);
+  --bg-card: rgba(15, 23, 42, 0.88);
+  --bg-elevated: rgba(15, 23, 42, 0.94);
+  --border-subtle: rgba(148, 163, 209, 0.35);
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.08);
+  --accent-strong: #0ea5e9;
+  --text-main: #e5e7eb;
+  --text-sub: #94a3b8;
+  --danger: #ef4444;
+  --warning: #fbbf24;
+  --success: #22c55e;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: var(--text-main);
+  height: 100%;
+}
+
+/* ───────────────── 배경: 날씨 + 시간대 애니메이션 ───────────────── */
+
+body {
+  transition: background 0.6s ease;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+}
+
+/* 날씨 타입별 기본 배경 */
+
+/* 맑음 */
+body.w-clear {
+  background: radial-gradient(circle at top, #38bdf8 0, #020617 45%, #000 100%);
+}
+
+/* 구름/흐림 */
+body.w-clouds {
+  background: radial-gradient(circle at top, #64748b 0, #020617 45%, #000 100%);
+}
+
+/* 비 / 소나기 */
+body.w-rain {
+  background: radial-gradient(circle at top, #0b1120 0, #020617 45%, #000 100%);
+}
+
+/* 눈 */
+body.w-snow {
+  background: radial-gradient(circle at top, #e5f2ff 0, #1e293b 45%, #020617 100%);
+}
+
+/* 안개/박무 등 */
+body.w-mist {
+  background: radial-gradient(circle at top, #94a3b8 0, #020617 45%, #000 100%);
+}
+
+/* 시간대 오버레이 공통 (좀 더 강하게) */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* 새벽 (0~4시): 진한 보라/파랑 오라 느낌 */
+body.t-dawn::before {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle at top, rgba(129, 140, 248, 0.95) 0, transparent 60%),
+    radial-gradient(circle at bottom, rgba(56, 189, 248, 0.4) 0, transparent 55%);
+  animation: dawnGlow 16s ease-in-out infinite alternate;
+}
+
+/* 오전 (5~11시): 파란 하늘이 확실하게 느껴지게 */
+body.t-morning::before {
+  opacity: 0.8;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.95) 0, transparent 55%),
+    radial-gradient(circle at bottom, rgba(34, 197, 94, 0.35) 0, transparent 60%);
+  animation: skyDrift 22s linear infinite;
+}
+
+/* 오후 (12~16시): 노란/주황빛 더 진하게 */
+body.t-afternoon::before {
+  opacity: 0.8;
+  background:
+    radial-gradient(circle at top, rgba(251, 191, 36, 0.95) 0, transparent 55%),
+    radial-gradient(circle at right, rgba(248, 250, 252, 0.25) 0, transparent 60%);
+  animation: sunPulse 18s ease-in-out infinite alternate;
+}
+
+/* 저녁 (17~20시): 일몰 느낌 확실히 */
+body.t-evening::before {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle at top, rgba(248, 113, 113, 1) 0, transparent 55%),
+    radial-gradient(circle at bottom, rgba(129, 140, 248, 0.6) 0, transparent 65%);
+  animation: sunsetFlow 24s linear infinite;
+}
+
+/* 밤 (21~23시): 더 어두운 밤 + 은은한 별빛 */
+body.t-night::before {
+  opacity: 0.95;
+  background:
+    radial-gradient(circle at top, rgba(15, 23, 42, 1) 0, transparent 60%),
+    radial-gradient(circle at center,
+      rgba(148, 163, 209, 0.35) 0,
+      transparent 55%);
+  animation: nightTwinkle 14s ease-in-out infinite alternate;
+}
+
+/* 비 내리는 효과 (비일 때만) */
+body.w-rain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18) 0,
+    transparent 55%
+  );
+  background-size: 2px 80px;
+  animation: rain-fall 0.7s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes rain-fall {
+  0% {
+    background-position: 0 -80px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* 눈 내리는 효과 (눈일 때만) */
+body.w-snow::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.95) 2px, transparent 4px),
+    radial-gradient(rgba(255, 255, 255, 0.8) 2px, transparent 4px),
+    radial-gradient(rgba(255, 255, 255, 0.6) 3px, transparent 5px);
+  background-size: 6px 6px, 8px 8px, 10px 10px;
+  animation: snow-fall 6s linear infinite;
+  opacity: 1;
+}
+
+@keyframes snow-fall {
+  0% {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 300px, -50px 300px, 50px 300px;
+  }
+}
+
+/* 새벽: 살짝 위아래로 숨 쉬는 느낌 */
+@keyframes dawnGlow {
+  0% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+}
+
+/* 오전: 하늘이 좌우로 아주 천천히 흐르는 느낌 */
+@keyframes skyDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-40px);
+  }
+}
+
+/* 오후: 햇빛이 살짝 강했다 약해지는 느낌 */
+@keyframes sunPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+/* 저녁: 그라데이션이 아주 천천히 위아래로 움직이는 느낌 */
+@keyframes sunsetFlow {
+  0% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(12px);
+  }
+}
+
+/* 밤: 별빛이 살짝 반짝이는 느낌 */
+@keyframes nightTwinkle {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.75;
+  }
+}
+
+/* ───────────────── 앱 쉘: 화면 꽉 차게 ───────────────── */
+
+.app-shell {
+  max-width: 1160px;
+  margin: 12px auto;
+  padding: 20px 22px 24px;
+  border-radius: 26px;
+  background: linear-gradient(
+      135deg,
+      rgba(248, 250, 252, 0.06),
+      rgba(15, 23, 42, 0.7)
+    ),
+    rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 209, 0.35);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(30px);
+  min-height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 */
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.app-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 제목 + 시간대 아이콘 가로 정렬 */
+.app-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-title {
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+/* 시간대 아이콘: 지금은 배경 애니메이션만 쓰고, 아이콘은 숨김 */
+.time-icon {
+  display: none;
+}
+
+.app-subtitle {
+  font-size: 13px;
+  margin: 0;
+  color: var(--text-sub);
+}
+
+/* 검색 영역 */
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 11px 13px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(148, 163, 209, 0.4);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-main);
+  outline: none;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: rgba(148, 163, 209, 0.7);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+}
+
+.search-btn {
+  padding: 11px 18px;
+  border-radius: var(--radius-lg);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0b1120;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 10px 24px rgba(56, 189, 248, 0.45);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.search-btn:hover {
+  transform: translateY(-0.5px);
+  box-shadow: 0 14px 28px rgba(56, 189, 248, 0.55);
+}
+
+.search-btn:active {
+  transform: translateY(0.5px);
+  box-shadow: 0 8px 18px rgba(56, 189, 248, 0.4);
+}
+
+/* 빠른 도시 버튼 */
+
+.quick-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.chip {
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(148, 163, 209, 0.5);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--text-sub);
+  padding: 5px 11px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease,
+    border-color 0.14s ease, transform 0.1s ease;
+}
+
+.chip:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: rgba(56, 189, 248, 0.85);
+  transform: translateY(-0.5px);
+}
+
+/* 메시지 */
+
+.message-box {
+  min-height: 18px;
+  margin: 4px 2px 0;
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.message-box.error {
+  color: var(--danger);
+}
+
+.message-box.success {
+  color: var(--success);
+}
+
+/* 레이아웃: 양쪽 칼럼이 꽉 차게 */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 10px;
+  flex: 1;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 카드 기본 */
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  padding: 16px 18px 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(16px);
+}
+
+/* 카드 헤더 */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.card-header h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* pill */
+
+.pill {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(148, 163, 209, 0.5);
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.pill-soft {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+/* 현재 날씨 카드 */
+
+.current-card {
+  padding-bottom: 16px;
+}
+
+.current-main {
+  display: flex;
+  gap: 18px;
+}
+
+.current-temp-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.current-emoji {
+  font-size: 32px;
+  margin-bottom: 2px;
+}
+
+.current-temp-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.current-temp {
+  font-size: 48px;
+  font-weight: 660;
+  letter-spacing: 0.03em;
+}
+
+.current-desc {
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.current-meta {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.current-city {
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.current-extra-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+
+.current-extra-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.current-extra-item .label {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.current-extra-item .value {
+  font-size: 13px;
+}
+
+/* 최저/최고: 풍속/기압 아래 라인 */
+.current-minmax {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+.current-icon-wrap {
+  align-self: flex-end;
+  text-align: right;
+}
+
+.current-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+/* 공기질 카드 */
+
+.airq-card {
+  padding-top: 12px;
+}
+
+.airq-index {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.airq-detail {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* AQI 색상 지표 바 */
+
+.airq-aqi-bar {
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+.airq-aqi-track {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #22c55e,
+    #4ade80,
+    #facc15,
+    #f97316,
+    #ef4444
+  );
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+.airq-aqi-pointer {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  border: 2px solid #0f172a;
+  box-shadow: 0 0 0 1px rgba(148, 163, 209, 0.65);
+  transition: left 0.3s ease;
+}
+
+.airq-aqi-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-size: 10px;
+  color: var(--text-sub);
+}
+
+/* 미세먼지 막대 그래프 */
+
+.airq-chart {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.aq-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aq-bar-label {
+  width: 52px;
+  color: var(--text-sub);
+}
+
+.aq-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 209, 0.35);
+  overflow: hidden;
+}
+
+.aq-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #fbbf24, #ef4444);
+  transition: width 0.4s ease;
+}
+
+.aq-bar-value {
+  min-width: 56px;
+  text-align: right;
+}
+
+/* 예보 카드 */
+
+.forecast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.forecast-item {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1.1fr; /* 날짜 / 설명+이모지 / 최저·최고 */
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(148, 163, 209, 0.35);
+  font-size: 13px;
+}
+
+.forecast-date {
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.forecast-desc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.forecast-emoji {
+  font-size: 18px;
+}
+
+.forecast-temp {
+  text-align: center;
+  font-size: 13px;
+}
+
+/* 최저/최고를 한 줄로 (줄바꿈 방지) */
+.forecast-temp-line {
+  white-space: nowrap;
+}
+
+.temp-max {
+  color: #f97316;
+  font-weight: 600;
+}
+
+.temp-min {
+  color: #38bdf8;
+  font-weight: 500;
+}
+
+.temp-divider {
+  color: var(--text-sub);
+  margin: 0 2px;
+}
+
+/* 푸터 */
+
+.app-footer {
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--text-sub);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* 반응형 */
+
+@media (max-width: 768px) {
+  .app-shell {
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+    padding: 14px 10px 18px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .current-main {
+    flex-direction: column;
+  }
+
+  .current-meta {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .current-temp {
+    font-size: 40px;
+  }
+
+  .current-icon-wrap {
+    align-self: center;
+  }
+
+  .forecast-item {
+    grid-template-columns: 0.9fr 1.1fr;
+    grid-template-rows: auto auto;
+    font-size: 12px;
+  }
+
+  .forecast-temp {
+    text-align: left;
+  }
+
+  .app-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

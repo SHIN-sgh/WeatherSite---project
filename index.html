@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>My-Weather-Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="app-title-wrap">
+        <div class="app-title-row">
+          <h1 class="app-title">오늘의 날씨</h1>
+          <!-- 시간대 아이콘 (새벽/오전/오후/저녁/밤) -->
+          <span id="timeIcon" class="time-icon" aria-label="time-of-day">🌞</span>
+        </div>
+        <p class="app-subtitle">현재 날씨 · 5일 예보 · 공기질까지 한 번에</p>
+      </div>
+
+      <form id="searchForm" class="search-bar">
+        <input
+          id="cityInput"
+          type="text"
+          class="search-input"
+          placeholder="Enter city name (ex: Seoul, Tokyo, New York, Paris)"
+          autocomplete="off"
+        />
+        <button type="submit" class="search-btn">검색</button>
+      </form>
+
+      <div class="quick-cities">
+        <button class="chip" data-city="Seoul">Seoul</button>
+        <button class="chip" data-city="Busan">Busan</button>
+        <button class="chip" data-city="Daegu">Daegu</button>
+        <button class="chip" data-city="Tokyo">Tokyo</button>
+        <button class="chip" data-city="New York">New York</button>
+        <button class="chip" data-city="Paris">Paris</button>
+      </div>
+
+      <p id="messageBox" class="message-box"></p>
+    </header>
+
+    <main class="layout">
+      <!-- 왼쪽: 현재 날씨 + 공기질 -->
+      <section class="column">
+        <article class="card current-card">
+          <div class="current-main">
+            <div class="current-temp-wrap">
+              <span id="currentDescEmoji" class="current-emoji">🌤</span>
+              <div class="current-temp-row">
+                <span id="currentTemp" class="current-temp">-°C</span>
+              </div>
+              <p id="currentDesc" class="current-desc">-</p>
+            </div>
+
+            <div class="current-meta">
+              <p id="currentCity" class="current-city">-</p>
+
+              <div class="current-extra-grid">
+                <div class="current-extra-item">
+                  <span class="label">체감</span>
+                  <span id="currentFeelsLike" class="value">-°C</span>
+                </div>
+                <div class="current-extra-item">
+                  <span class="label">습도</span>
+                  <span id="currentHumidity" class="value">-%</span>
+                </div>
+                <div class="current-extra-item">
+                  <span class="label">풍속</span>
+                  <span id="currentWind" class="value">- m/s</span>
+                </div>
+                <div class="current-extra-item">
+                  <span class="label">기압</span>
+                  <span id="currentPressure" class="value">- hPa</span>
+                </div>
+              </div>
+
+              <!-- 최저/최고: 풍속/기압 아래 라인 -->
+              <p id="currentMinMax" class="current-minmax">
+                최저 -°C / 최고 -°C
+              </p>
+
+              <div class="current-icon-wrap">
+                <img
+                  id="currentIcon"
+                  src=""
+                  alt="날씨 아이콘"
+                  class="current-icon"
+                />
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card airq-card">
+          <div class="card-header">
+            <h2>공기질 & 미세먼지</h2>
+            <span class="pill pill-soft" id="airQualityLocation">-</span>
+          </div>
+
+          <p id="airQualityIndex" class="airq-index">AQI: -</p>
+
+          <!-- AQI 색상 지표 바 -->
+          <div class="airq-aqi-bar">
+            <div class="airq-aqi-track">
+              <div id="airQualityAqiPointer" class="airq-aqi-pointer"></div>
+            </div>
+            <div class="airq-aqi-steps">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+            </div>
+          </div>
+
+          <p id="airQualityDetail" class="airq-detail"></p>
+
+          <!-- PM2.5 / PM10 막대 그래프 -->
+          <div id="airQualityChart" class="airq-chart"></div>
+        </article>
+      </section>
+
+      <!-- 오른쪽: 5일 예보 -->
+      <section class="column">
+        <article class="card forecast-card">
+          <div class="card-header">
+            <h2>5일 예보</h2>
+            <span class="pill" id="forecastCityPill">-</span>
+          </div>
+          <div id="forecastList" class="forecast-list">
+            <!-- JS로 채워짐 -->
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>데이터: OpenWeather / Air Pollution API</span>
+      <span>도시 이름은 영어로 입력해 주세요</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

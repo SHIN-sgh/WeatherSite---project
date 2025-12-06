@@ -92,13 +92,12 @@ Yr.no — Minimal and clean design approach
 ---
 
 ## 7. 실행 방법  
-1. 저장소 파일을 다운로드합니다.  
-2. 브라우저에서 index.html 파일을 실행합니다.  
-3. 위치 사용을 허용하면 자동으로 현재 날씨가 표시됩니다.  
-
-1. Download the repository files  
-2. Open index.html in a web browser  
-3. Allow location access to automatically see local weather  
+1. 저장소 파일을 다운로드합니다.
+  Download the repository files  
+3. 브라우저에서 index.html 파일을 실행합니다.
+  Open index.html in a web browser 
+5. 위치 사용을 허용하면 자동으로 현재 날씨가 표시됩니다.
+  Allow location access to automatically see local weather
 
 ---
 
